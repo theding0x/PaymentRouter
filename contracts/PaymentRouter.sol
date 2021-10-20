@@ -20,6 +20,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /// @notice This contract is only useable by the owner
 contract PaymentRouter is Ownable {
     struct Wallet {
+        string name;
         address payable addr;
         uint128 rate;
     }
@@ -28,6 +29,7 @@ contract PaymentRouter is Ownable {
     event PaymentReceived(address indexed _from, uint _value);
     event PaymentDistributed(address indexed _from, address primary, address tax, address savings, uint withheld, uint net, uint saved);
     event RatesChanged(address indexed _from, uint64 newTaxRate, uint64 newSavingsRate);
+    event WalletAddressChanged(string name, address oldAddress, address newAddress);
 
     /**
         @notice Creates a new instance of the payment router.
@@ -41,9 +43,9 @@ contract PaymentRouter is Ownable {
         
         uint128 primaryRate = getPrimaryRate(_taxRate, _savingsRate); // Calculate the primary rate from the tax and savings rate
 
-        wallet[0] = Wallet(_taxWallet,_taxRate);            // Set tax wallet address and rate
-        wallet[1] = Wallet(_savingsWallet, _savingsRate);   // Set savings wallet address and rate
-        wallet[2] = Wallet(_primaryWallet, primaryRate);     // Set primary wallet address and rate
+        wallet[0] = Wallet("Tax Withholdings",_taxWallet,_taxRate);            // Set tax wallet address and rate
+        wallet[1] = Wallet("Savings", _savingsWallet, _savingsRate);   // Set savings wallet address and rate
+        wallet[2] = Wallet("Primary", _primaryWallet, primaryRate);     // Set primary wallet address and rate
     }
     /**
         @notice Finds the primary rate based on the tax and savings rates
@@ -93,7 +95,9 @@ contract PaymentRouter is Ownable {
      */
     function setWalletAddress(uint id, address payable addr) external onlyOwner {
         require(id < 3 && id >= 0, "Id must be between 0-2");
+        address payable oldAddress = wallet[id].addr;
         wallet[id].addr = addr;
+        emit WalletAddressChanged(wallet[id].name, oldAddress, addr);
     }
     /**
         @notice Looks up wallet information by wallet id and returns a struct
