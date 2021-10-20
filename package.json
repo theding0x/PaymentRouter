@@ -1,0 +1,28 @@
+{
+  "name": "tax-router",
+  "version": "1.0.0",
+  "description": "ethereum smart contract to automatically seperate taxable income",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crypto",
+    "tax",
+    "eth"
+  ],
+  "author": "theding0x.eth",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "chai-bn": "^0.3.0",
+    "chai-string": "^1.5.0"
+  }
+}
